@@ -1,0 +1,18 @@
+#! /bin/bash
+
+# https://github.com/yosoufe/instructions/blob/main/read_aloud_ubuntu.md
+
+loudreader=play
+#loudreader=vlc
+loudreader_pid=$(pidof ${loudreader})
+speed="1.2"   # tune this according to your preferences
+
+if [ -z "$loudreader_pid" ]
+then
+    xclip -out -selection primary | xclip -in -selection clipboard
+    xsel --clipboard | tr "\n" " " | gtts-cli - |
+    ${loudreader} -q -t mp3 - tempo ${speed} >/dev/null 2>&1 &
+    #c${loudreader} -q --play-and-exit --rate ${speed} - 2>/dev/null
+else
+    kill $loudreader_pid
+fi
